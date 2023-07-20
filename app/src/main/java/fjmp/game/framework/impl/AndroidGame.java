@@ -48,8 +48,8 @@ public abstract class AndroidGame extends Activity implements Game {
 
         boolean isLandScape=getResources().getConfiguration().orientation==
                 Configuration.ORIENTATION_LANDSCAPE;
-        int frameBufferWidth=isLandScape?480:320;
-        int frameBufferHeight=isLandScape?320:480;
+        int frameBufferWidth=isLandScape?1280:720;
+        int frameBufferHeight=isLandScape?720:1280;
         Bitmap frameBuffer=Bitmap.createBitmap(frameBufferWidth,
                 frameBufferHeight,Config.RGB_565);
 
