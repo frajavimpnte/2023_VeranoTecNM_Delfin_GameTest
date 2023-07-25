@@ -10,17 +10,21 @@ import java.io.OutputStreamWriter;
 
 public class Settings {
     public static boolean soundEnabled = true;
-    public final static int[] highscores = new int[] {100, 80, 50, 30, 10 };
-    public final static String file = ".mrnorm";
+
+    /*public final static int[] highscores = new int[] {100, 80, 50, 30, 10 };
+    */
+    public final static String file = ".numerinletrita";
 
     public static void load(FileIO files) {
         BufferedReader in = null;
         try {
             in = new BufferedReader(new InputStreamReader(files.readFile(file)));
             soundEnabled = Boolean.parseBoolean(in.readLine());
+            /*
             for(int i = 0; i < 5; i++) {
                 highscores[i] = Integer.parseInt(in.readLine());
             }
+             */
         } catch (IOException e) {
             // :( It's ok we have defaults
         } catch (NumberFormatException e) {
@@ -34,14 +38,17 @@ public class Settings {
         }
     }
 
-    public static void save(FileIO files) { BufferedWriter out = null;
+    public static void save(FileIO files) {
+        BufferedWriter out = null;
         try {
             out = new BufferedWriter(new OutputStreamWriter( files.writeFile(file)));
             out.write(Boolean.toString(soundEnabled)); out.write("\n");
+            /*
             for(int i = 0; i < 5; i++) {
                 out.write(Integer.toString(highscores[i]));
                 out.write("\n");
             }
+             */
         } catch (IOException e) {
         } finally {
             try {
@@ -53,6 +60,7 @@ public class Settings {
     }
 
     public static void addScore(int score) {
+        /*
         for(int i=0; i < 5; i++) {
             if(highscores[i] < score) {
                 for(int j= 4; j > i; j--)
@@ -61,6 +69,7 @@ public class Settings {
                 break;
             }
         }
+         */
     }
 
 

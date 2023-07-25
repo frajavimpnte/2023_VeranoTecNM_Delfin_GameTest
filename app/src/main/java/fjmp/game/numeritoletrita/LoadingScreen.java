@@ -1,9 +1,12 @@
 package fjmp.game.numeritoletrita;
 
+import android.graphics.PixelFormat;
+
 import fjmp.game.framework.Game;
 import fjmp.game.framework.Graphics;
 import fjmp.game.framework.Screen;
 import fjmp.game.framework.Graphics.PixmapFormat;
+import fjmp.game.framework.impl.GLScreen;
 
 public class LoadingScreen extends Screen {
     public LoadingScreen(Game game) {
@@ -12,9 +15,35 @@ public class LoadingScreen extends Screen {
     public void update(float deltaTime) {
         Graphics g = game.getGraphics();
 
+        // Loading Assets for all screen =============================
         Assets.background = g.newPixmap("background.png", PixmapFormat.RGB565);
-        /*
+
+        Assets.sound = g.newPixmap("sonido2.png", PixmapFormat.ARGB4444);
+        Assets.silence = g.newPixmap("silencio2.png", PixmapFormat.ARGB4444);
+        Assets.click=game.getAudio().newSound("click.ogg");
+        // Setting files
+        Settings.load(game.getFileIO());
+
+        // Soundtrack
+        Assets.music = game.getAudio().newMusic("EduGamePlatTest2.wav");
+        Assets.music.setLooping(true);
+        Assets.music.setVolume(0.5f);
+        if (Settings.soundEnabled)
+            Assets.music.play();
+
+
+        // Loading Assets for MainMenuScreen ===============================
         Assets.logo=g.newPixmap("logo.png", PixmapFormat.ARGB4444);
+        Assets.letrita=g.newPixmap("letrita.png", PixmapFormat.ARGB4444);
+        Assets.numerin=g.newPixmap("numerin.png", PixmapFormat.ARGB4444);
+        Assets.planetaLetrita=g.newPixmap("planeta_letrita.png", PixmapFormat.ARGB4444);
+        Assets.planetaNumerin=g.newPixmap("planeta_numerin.png", PixmapFormat.ARGB4444);
+        Assets.play=g.newPixmap("play2.png", PixmapFormat.ARGB4444);
+
+
+        // new screen main menu ============================================
+        game.setScreen(new MainMenuScreen(game));
+        /*
         Assets.mainaMenu=g.newPixmap("mainmenu.png", PixmapFormat.ARGB4444);
         Assets.buttons=g.newPixmap("buttons.png",PixmapFormat.ARGB4444);
         Assets.help1=g.newPixmap("help1.png", PixmapFormat.ARGB4444);
@@ -33,12 +62,12 @@ public class LoadingScreen extends Screen {
         Assets.stain2=g.newPixmap("stain2.png",PixmapFormat.ARGB4444);
         Assets.stain3=g.newPixmap("stain3.png",PixmapFormat.ARGB4444);
 
-        Assets.click=game.getAudio().newSound("click.ogg");
+
         Assets.eat=game.getAudio().newSound("eat.ogg");
         Assets.bitten=game.getAudio().newSound("bitten.ogg");
         Settings.load(game.getFileIO());
         */
-        game.setScreen(new MainMenuScreen(game));
+
     }
     public void present(float deltaTime){
 
