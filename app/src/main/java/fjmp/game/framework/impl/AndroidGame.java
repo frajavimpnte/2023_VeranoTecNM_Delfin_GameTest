@@ -46,7 +46,7 @@ public abstract class AndroidGame extends Activity implements Game {
         Pixmap ap = ag.newPixmap("pausemenu.png", Graphics.PixmapFormat.ARGB4444);
         */
 
-        boolean isLandScape=getResources().getConfiguration().orientation==
+        boolean isLandScape=getResources().getConfiguration().orientation ==
                 Configuration.ORIENTATION_LANDSCAPE;
         int frameBufferWidth=isLandScape?1280:720;
         int frameBufferHeight=isLandScape?720:1280;
