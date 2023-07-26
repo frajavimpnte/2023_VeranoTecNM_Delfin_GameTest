@@ -104,8 +104,41 @@ public class AndroidGraphics implements Graphics {
 
         canvas.drawBitmap(((AndroidPixmap) pixmap).bitmap, srcRect, dstRect, null);
     }
+    public void drawPixmapScale(Pixmap pixmap, int x, int y, int srcX, int srcY,
+                           int srcWidth, int srcHeight, float scale) {
+        srcRect.left=srcX;
+        srcRect.top=srcY;
+        srcRect.right=srcX+srcWidth-1;
+        srcRect.bottom=srcY+srcHeight-1;
+
+        dstRect.left=x;
+        dstRect.top=y;
+        dstRect.right=x+srcWidth-1;
+        dstRect.bottom=y+srcHeight-1;
+
+        int tx =(int) ((scale -1.0f) * srcWidth / 2.0f);
+        int ty =(int) ((scale -1.0f) * srcHeight / 2.0f);
+
+        dstRect.left=x-tx;
+        dstRect.top=y-tx;
+        dstRect.right=x+srcWidth-1+tx;
+        dstRect.bottom=y+srcHeight-1+ty;
+
+        canvas.drawBitmap(((AndroidPixmap) pixmap).bitmap, srcRect, dstRect, null);
+    }
     public void drawPixmap(Pixmap pixmap, int x, int y) {
         canvas.drawBitmap(((AndroidPixmap)pixmap).bitmap, x,y,null);
+    }
+    public void drawPixmapScale(Pixmap pixmap, int x, int y, float scale) {
+        int w = ((AndroidPixmap)pixmap).bitmap.getWidth();
+        int h = ((AndroidPixmap)pixmap).bitmap.getHeight();
+        int tx =(int) ((scale -1.0f) * w / 2.0f);
+        int ty =(int) ((scale -1.0f) * h / 2.0f);
+        canvas.save();
+        canvas.translate(x-tx,y-ty);
+        canvas.scale(scale,scale);
+        canvas.drawBitmap(((AndroidPixmap)pixmap).bitmap, 0,0,null);
+        canvas.restore();
     }
     public int getWidth(){
         return frameBuffer.getWidth();

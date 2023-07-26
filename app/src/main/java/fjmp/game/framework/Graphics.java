@@ -11,7 +11,10 @@ public interface Graphics {
     public void drawRect(int x, int y, int width, int height, int color);
     public void drawPixmap(Pixmap pixmap, int x, int y, int srcX, int srcY,
                            int srcWidth, int srcHeight);
+    public void drawPixmapScale(Pixmap pixmap, int x, int y, int srcX, int srcY,
+                                int srcWidth, int srcHeight, float scale);
     public void drawPixmap(Pixmap pixmap, int x, int y);
+    public void drawPixmapScale(Pixmap pixmap, int x, int y, float scale);
     public int getWidth();
     public int getHeight();
 }
