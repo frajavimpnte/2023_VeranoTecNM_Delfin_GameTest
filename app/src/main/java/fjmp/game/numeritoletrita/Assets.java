@@ -13,17 +13,26 @@ public class Assets {
 
     public static Music music;
     public static Sound click;
+    public static Sound soundNumbers[];
 
     public static Pixmap sound;
     public static Pixmap silence;
+    public static Pixmap play;
+    public static Pixmap numerin;
+    public static Pixmap letrita;
 
-    //Asset for MainMenuSceen
+    //Asset for MainMenuScreen
     public static Pixmap logo;
     public static Pixmap planetaLetrita;
     public static Pixmap planetaNumerin;
-    public static Pixmap numerin;
-    public static Pixmap letrita;
-    public static Pixmap play;
+
+
+    // Asset for NumerinScreen
+    public static Pixmap home;
+    public static Pixmap back;
+    public static Pixmap bubble_numerin;
+    public static Pixmap numeros_row;
+
     /*
     public static Pixmap mainaMenu;
     public static Pixmap buttons;

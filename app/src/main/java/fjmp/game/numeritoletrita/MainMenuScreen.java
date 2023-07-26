@@ -67,6 +67,7 @@ public class MainMenuScreen extends Screen {
             if(event.type == TouchEvent.TOUCH_UP) {
                 Log.d("MainMenuScreen: ",
                         "touch at: " + event.x + ", " + event.y );
+                // sound event test
                 if (inBounds(event, 1040, 10, 101,101)) {
                     Assets.click.play(1);
                     if (Settings.soundEnabled)
@@ -74,32 +75,17 @@ public class MainMenuScreen extends Screen {
                     else
                         Assets.music.play();
                     Settings.soundEnabled = !Settings.soundEnabled;
+                }
+                // play numerin
+                if(inBounds(event, 80, 340, 300,295)) {
+                    if(Settings.soundEnabled)
+                        Assets.click.play(1);
 
-                }
-                /*
-                if (inBounds(event, 0, g.getHeight()-64,64,64)) {
-                    Settings.soundEnabled = !Settings.soundEnabled;
-                    if(Settings.soundEnabled)
-                        Assets.click.play(1);
-                }
-                if(inBounds(event, 64, 220, 192,42)) {
-                    game.setScreen(new GameScreen(game));
-                    if(Settings.soundEnabled)
-                        Assets.click.play(1);
+                    game.setScreen(new NumerinScreen(game));
+
                     return;
                 }
-                if(inBounds(event,64,220+42,192,42)) {
-                    game.setScreen(new HighscoreScreen(game));
-                    if(Settings.soundEnabled)
-                        Assets.click.play(1);
-                    return;
-                }
-                if(inBounds(event,64,220+84,192,42)) {
-                    game.setScreen(new HelpScreen(game));
-                    if(Settings.soundEnabled)
-                        Assets.click.play(1);
-                    return;
-                }*/
+
             }
         }
 
