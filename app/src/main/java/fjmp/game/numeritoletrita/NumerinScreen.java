@@ -124,5 +124,7 @@ public class NumerinScreen extends Screen {
     }
     @Override
     public void dispose(){
+        if (Settings.soundEnabled)
+            Assets.music.play();
     }
 }

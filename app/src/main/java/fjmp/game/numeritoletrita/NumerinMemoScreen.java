@@ -19,27 +19,10 @@ public class NumerinMemoScreen extends Screen {
     int posyNumerin = 250;
 
     // Board with animation sprints
-    final int BOARD_ROWS = 4;
-    final int BOARD_COLS = 5;
-    CardMemoSprit boardMemo[][] = new CardMemoSprit[BOARD_ROWS][BOARD_COLS];
-
-
+    MemoGame memo;
     public NumerinMemoScreen(Game game) {
         super(game);
-
-        // asignar memporia al board e inicializar numeros
-        // 0,1,2,3,4
-        // 5,6,7,8,9
-        // 0,1,2,3,4
-        // 5,6,7,8,9
-        for (int i = 0; i < BOARD_ROWS; i++) {
-            for (int j = 0; j < BOARD_COLS; j++) {
-                boardMemo[i][j] = new CardMemoSprit(
-                        0.1f,
-                        false,
-                        ((i%2)*5 + j));
-            }
-        }
+        memo = new MemoGame();
     }
     @Override
     public void update(float deltaTime) {
@@ -48,18 +31,8 @@ public class NumerinMemoScreen extends Screen {
                 (int) (200 * Math.sin(2.0 * Math.PI * time / 20.0));
         time += deltaTime;
 
-        for (int i = 0; i < BOARD_ROWS; i++) {
-            for (int j = 0; j < BOARD_COLS; j++) {
-                if (boardMemo[i][j].isAnimating()) {
-                    //Log.d("Update: ",
-                    //       "i=" + i + ", j=" + j + "--------------");
-                    //Log.d("Update: ",
-                    //        "animTime="+  boardMemo[i][j].getAnimTime());
-                    boardMemo[i][j].update(deltaTime);
-                }
-            }
-        }
-
+        // update memo
+        memo.update(deltaTime);
 
         // evento sobre carta===============================================
         List<Input.TouchEvent> touchEvents = game.getInput().getTouchEvents();
@@ -71,15 +44,14 @@ public class NumerinMemoScreen extends Screen {
             Input.TouchEvent event = touchEvents.get(i);
             if (event.type == Input.TouchEvent.TOUCH_UP) {
                 // number selected sound
-                for (int ii = 0; ii < BOARD_ROWS; ii++) {
-                    int y = 120 + ii * (100 + 40);
-                    for (int jj = 0; jj < BOARD_COLS; jj++) {
-                        int x = 200 + jj * (100 + 60);
-
-                        if (inBounds(event, x, y,
+                for (int ii = 0; ii < memo.BOARD_ROWS; ii++) {
+                    for (int jj = 0; jj < memo.BOARD_COLS; jj++) {
+                        if (inBounds(event,
+                                memo.getCardPositionX(ii, jj),
+                                memo.getCardPositionY(ii, jj),
                                 100, 100)) {
-                            boardMemo[ii][jj].setAnimatingFlag(true);
-                            Assets.soundNumbers[boardMemo[ii][jj].getNumber()].play(1);
+                            memo.setAnimationFlag(ii, jj,true);
+                            Assets.soundNumbers[memo.getCardNumber(ii, jj)].play(1);
                             //Assets.click.play(1);
                             //Log.d("TouchEvent: ",
                             //        "ii=" + ii + " jj="+ jj + "--------------------");
@@ -110,34 +82,21 @@ public class NumerinMemoScreen extends Screen {
         else
             g.drawPixmap(Assets.silence, 1040, 10);
 
-        for (int i = 0; i < BOARD_ROWS; i++) {
-            int y = 120 + i * (100 + 40);
-            for (int j = 0; j < BOARD_COLS; j++) {
-               int  x = 200 +  j*(100 + 60);
-                //animateCard(x, y, deltaTime, 0.2f);
-                //int keyFrame = boardMemo[i][j].getKeyFrame();
-                /*
-                int keyFrame = 0;
-                if (boardMemo[i][j].isAnimating()) {
-                    keyFrame = boardMemo[i][j].getKeyFrame();
-                    Log.d("Present: ",
-                            "i=" + i + " j="+ j +
-                                    ", keyframe:" + boardMemo[i][j].getKeyFrame() +
-                                    ", animTimne:" +  boardMemo[i][j].getAnimTime() +
-                                    ", is animating--------------------");
-
-                }*/
-                g.drawPixmap(Assets.cardNumerinMemoSprit, x, y,
-                        boardMemo[i][j].getSpritFrame()*100,
+        for (int i = 0; i < memo.BOARD_ROWS; i++) {
+            for (int j = 0; j < memo.BOARD_COLS; j++) {
+                g.drawPixmap(Assets.cardNumerinMemoSprit,
+                        memo.getCardPositionX(i,j),
+                        memo.getCardPositionY(i, j),
+                        memo.getCardSpritFrame(i,j)*100,
                         0, 100, 100 );
-                // dibujar si se termino la anumacion
-                if (boardMemo[i][j].getKeyFrame() >= boardMemo[i][j].sequenseCardAnim.length-1) {
-                    g.drawPixmap(Assets.numeros_row, x, y,
-                            100*boardMemo[i][j].getNumber(),
+                // dibujar si se termino la animacion
+                if (memo.getDrawCardNumber(i, j))
+                    g.drawPixmap(Assets.numeros_row,
+                            memo.getCardPositionX(i,j),
+                            memo.getCardPositionY(i,j),
+                            100*memo.getCardNumber(i, j),
                             0, 100, 100 );
 
-
-                }
             }
         }
 
@@ -160,15 +119,71 @@ public class NumerinMemoScreen extends Screen {
     }
 
     static class MemoGame {
+        final int BOARD_ROWS = 4;
+        final int BOARD_COLS = 5;
+        private CardMemoSprit boardMemo[][] = new CardMemoSprit[BOARD_ROWS][BOARD_COLS];
 
+        public MemoGame() {
+            // asignar memporia al board e inicializar numeros
+            // 0,1,2,3,4
+            // 5,6,7,8,9
+            // 0,1,2,3,4
+            // 5,6,7,8,9
+
+            for (int i = 0; i < BOARD_ROWS; i++) {
+                int y = 120 + i * (100 + 40);
+                for (int j = 0; j < BOARD_COLS; j++) {
+                    int  x = 200 +  j*(100 + 60);
+                    boardMemo[i][j] = new CardMemoSprit(
+                            0.1f,
+                            false,
+                            ((i%2)*5 + j));
+                    boardMemo[i][j].setPosition(x,y);
+                }
+            }
+        }
+        public int getCardSpritFrame(int row, int col) {
+            return boardMemo[row][col].getSpritFrame();
+        }
+        public int getCardNumber(int row, int col) {
+            return boardMemo[row][col].getNumber();
+        }
+        public int getCardPositionX(int row, int col) {
+            return boardMemo[row][col].getX();
+        }
+        public int getCardPositionY(int row, int col) {
+            return boardMemo[row][col].getY();
+        }
+        public void setAnimationFlag(int row, int col, boolean flag) {
+            boardMemo[row][col].setAnimatingFlag(flag);
+        }
+        public boolean getDrawCardNumber(int row, int col) {
+            return boardMemo[row][col].getDrawNumber();
+        }
+        public void update(float deltaTime) {
+            for (int i = 0; i < BOARD_ROWS; i++) {
+                for (int j = 0; j < BOARD_COLS; j++) {
+                    if (boardMemo[i][j].isAnimating()) {
+                        //Log.d("Update: ",
+                        //       "i=" + i + ", j=" + j + "--------------");
+                        //Log.d("Update: ",
+                        //        "animTime="+  boardMemo[i][j].getAnimTime());
+                        boardMemo[i][j].update(deltaTime);
+                    }
+                }
+            }
+        }
     }
     static class CardMemoSprit {
-        boolean animatingFlag = false;
-        float animTime = 0;                             // runnig animation time
-        float frameDuration = 0.1f;                        // frame change time
-        int frameNumber;                                // actual frame number
-        int[] sequenseCardAnim = {0,1,2,3,4,3,2,1,0};   // animation sequence
-        int number = 0;                                 // state number
+        private boolean animatingFlag;                  // animante flag
+        private float animTime;                             // runnig animation time
+        private float frameDuration = 0.1f;                     // frame change time
+        private int frameNumber;                                // actual frame number
+        private int[] sequenseCardAnim = {0,1,2,3,4,3,2,1,0};   // animation sequence
+        private int number = 0;                                 // card number, default 0
+        private boolean drawNumber = false;                     // draw nummber, default false
+        private int x;                                          // card position x
+        private int y;                                          // card position x
 
         public CardMemoSprit(float frameDuration, boolean animatingFlag) {
             this.frameDuration = frameDuration;
@@ -180,12 +195,28 @@ public class NumerinMemoScreen extends Screen {
             this.number = number;
         }
 
+        public void setPosition(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        public int getX() {
+            return this.x;
+        }
+        public int getY() {
+            return this.y;
+        }
+
         public void seNumber(int number) {
             this.number = number;
         }
 
         public int getNumber() {
             return this.number;
+        }
+
+        public boolean getDrawNumber() {
+            return this.drawNumber;
         }
         public void setAnimatingFlag(boolean animatingFlag) {
             if (animatingFlag)
@@ -212,8 +243,10 @@ public class NumerinMemoScreen extends Screen {
             //Log.d("getKeyFrame", "fn1:" + frameNumber + "---------------");
             frameNumber = Math.min(sequenseCardAnim.length-1, frameNumber);
             //Log.d("getKeyFrame", "fn2:" + frameNumber + "---------------");
-            if (frameNumber == sequenseCardAnim.length -1)
+            if (frameNumber == sequenseCardAnim.length -1) {
                 animatingFlag = false;
+                drawNumber = true;
+            }
             return frameNumber;
         }
 
