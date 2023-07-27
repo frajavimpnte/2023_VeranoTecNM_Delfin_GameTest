@@ -81,7 +81,7 @@ public class MainMenuScreen extends Screen {
                     if(Settings.soundEnabled)
                         Assets.click.play(1);
 
-                    game.setScreen(new NumerinScreen(game));
+                     game.setScreen(new NumerinScreen(game));
 
                     return;
                 }

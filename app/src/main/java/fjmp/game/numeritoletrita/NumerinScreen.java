@@ -50,8 +50,13 @@ public class NumerinScreen extends Screen {
                     if(Settings.soundEnabled)
                         Assets.click.play(1);
                     game.setScreen(new MainMenuScreen(game));
+                } else if  (inBounds(event, 1060, 530, 150, 180)) { // memo
+                    if(Settings.soundEnabled)
+                        Assets.click.play(1);
+                    game.setScreen(new NumerinMemoScreen(game));
                 }
                 // number selected sound
+
                 for (int j = 0; j < 10; j++) {
                     if (inBounds(event, xPosBoard[j], yPosBoard[j], 100, 100)) {
                         Assets.soundNumbers[j].play(1);
