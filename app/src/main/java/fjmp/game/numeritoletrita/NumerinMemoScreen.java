@@ -10,6 +10,7 @@ import fjmp.game.framework.Screen;
 import android.util.Log;
 
 import java.util.List;
+import java.util.Random;
 
 public class NumerinMemoScreen extends Screen {
     // time variable
@@ -141,6 +142,26 @@ public class NumerinMemoScreen extends Screen {
                     boardMemo[i][j].setPosition(x,y);
                 }
             }
+
+            // reorganizar
+            shuffle(10);
+        }
+        private void shuffle(int amount) {
+            Random numAleatorioRows = new Random();
+            Random numAleatorioCols = new Random();
+
+            // Constructor pasadole una semilla
+            for (int i = 0; i < amount; i++) {
+                int x1 = numAleatorioRows.nextInt(BOARD_ROWS);
+                int y1 = numAleatorioCols.nextInt(BOARD_COLS);
+
+                int x2 = numAleatorioRows.nextInt(BOARD_ROWS);
+                int y2 = numAleatorioCols.nextInt(BOARD_COLS);
+
+                int numberCard1 = boardMemo[x1][y1].getNumber();
+                boardMemo[x1][y1].setNumber( boardMemo[x2][y2].getNumber()  );
+                boardMemo[x2][y2].setNumber(numberCard1);
+            }
         }
         public int getCardSpritFrame(int row, int col) {
             return boardMemo[row][col].getSpritFrame();
@@ -207,7 +228,7 @@ public class NumerinMemoScreen extends Screen {
             return this.y;
         }
 
-        public void seNumber(int number) {
+        public void setNumber(int number) {
             this.number = number;
         }
 
@@ -249,6 +270,5 @@ public class NumerinMemoScreen extends Screen {
             }
             return frameNumber;
         }
-
     }
 }
